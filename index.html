@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <!--<script type="text/javascript" src="http://requirejs.org/docs/release/2.1.14/comments/require.js"></script>-->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
+    <script type="text/javascript" src="js/rotator.js"></script>
+</head>
+<body>
+<div id="container" style="width: 300px;"></div>
+
+<script type="text/javascript">
+    var images = [];
+    for (var i = 1; i <= 176; i += 5) {
+        var iStr = "" + i;
+        for (var l = iStr.length; l <= 4; l++) {
+            iStr = "0" + iStr;
+        }
+
+        images.push("images/" + iStr + ".png");
+    }
+
+    $("#container").rotator({
+        width: 300,
+        height: 200,
+        images: images,
+        clockwise: false,
+        regions: [
+            $.region("150 0 75 200 225 200", {fill: "#eee", "fill-opacity": 0.5, cursor: "pointer"}, [0, 1, 2, 3])
+        ]
+    })
+</script>
+</body>
+</html>
