@@ -114,7 +114,7 @@
       };
 
       function Rotator($el, settings) {
-        var afterOnLoad, defaultBg, h, imagesCount, img, paper, w, _i, _len, _ref, _ref1, _ref2, _ref3;
+        var defaultBg, h, imagesCount, img, onLoadAll, w, _i, _len, _ref, _ref1, _ref2, _ref3;
         this.$el = $el;
         this.settings = settings;
         _.bindAll(this, "onMouseDown", "onMouseUp", "onMouseMove", "onLoad");
@@ -124,21 +124,16 @@
         }
         w = (_ref = settings.width) != null ? _ref : $el.width();
         h = (_ref1 = settings.height) != null ? _ref1 : $el.height();
-        this.paper = paper = Raphael($el.get(0), w, h);
-        afterOnLoad = _.after(imagesCount, (function(_this) {
-          return function() {
-            return _this.onLoad();
-          };
-        })(this));
+        this.paper = Raphael($el.get(0), w, h);
+        onLoadAll = _.after(imagesCount, this.onLoad);
         _ref2 = settings.images;
         for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
           img = _ref2[_i];
-          Rotator.preload(img, afterOnLoad);
+          Rotator.preload(img, onLoadAll);
         }
         defaultBg = (_ref3 = settings.defaultImage) != null ? _ref3 : settings.images[0];
-        this.background = paper.image(defaultBg, 0, 0, w, h);
+        this.background = this.paper.image(defaultBg, 0, 0, w, h);
         this.background.toBack();
-        return;
       }
 
       Rotator.prototype.onLoad = function() {
@@ -163,7 +158,7 @@
           mouseup: this.onMouseUp,
           mousemove: this.onMouseMove
         });
-        return this.goToSlide(0);
+        this.goToSlide(0);
       };
 
       Rotator.prototype.onMouseDown = function(e) {
@@ -275,7 +270,7 @@
         $el = $(this);
         data = $el.data();
         if (data.rotator == null) {
-          settings = $.extend(Rotator.defaults, args[0]);
+          settings = $.extend({}, Rotator.defaults, args[0]);
           data.rotator = new Rotator($el, settings);
         } else if (args.length > 0) {
           (_ref = data.rotator)[args.shift()].apply(_ref, args);

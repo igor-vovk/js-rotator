@@ -11,7 +11,8 @@
     <script type="text/javascript" src="js/rotator.js"></script>
 </head>
 <body>
-<div id="container" style="width: 300px;"></div>
+<div id="container1" style="width: 300px;"></div>
+<div id="container2" style="width: 300px;"></div>
 
 <script type="text/javascript">
     var images = [];
@@ -24,7 +25,7 @@
         images.push("images/" + iStr + ".png");
     }
 
-    $("#container").rotator({
+    $("#container1").rotator({
         width: 300,
         height: 200,
         images: images,
@@ -32,7 +33,13 @@
         regions: [
             $.region("150 0 75 200 225 200", {fill: "#eee", "fill-opacity": 0.5, cursor: "pointer"}, [0, 1, 2, 3])
         ]
-    })
+    });
+    $("#container2").rotator({
+        width: 310,
+        height: 200,
+        images: images,
+        clockwise: false
+    });
 </script>
 </body>
 </html>

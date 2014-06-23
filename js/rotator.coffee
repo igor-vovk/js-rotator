@@ -75,16 +75,14 @@
       w = settings.width ? $el.width()
       h = settings.height ? $el.height()
 
-      @paper = paper = Raphael $el.get(0), w, h
+      @paper = Raphael $el.get(0), w, h
 
-      afterOnLoad = _.after imagesCount, => @onLoad()
-      Rotator.preload img, afterOnLoad for img in settings.images
+      onLoadAll = _.after imagesCount, @onLoad
+      Rotator.preload img, onLoadAll for img in settings.images
 
       defaultBg = settings.defaultImage ? settings.images[0]
-      @background = paper.image defaultBg, 0, 0, w, h
+      @background = @paper.image defaultBg, 0, 0, w, h
       @background.toBack()
-
-      return
 
     onLoad: ->
       @regionsBySlides = (@paper.set() for [0..@settings.images.length])
@@ -99,6 +97,7 @@
         mousemove: @onMouseMove
 
       @goToSlide 0
+      return
 
     onMouseDown: (e) ->
       @prevMouseX = e.pageX
@@ -178,7 +177,7 @@
       data = $el.data()
 
       unless data.rotator?
-        settings = $.extend Rotator.defaults, args[0]
+        settings = $.extend {}, Rotator.defaults, args[0]
         data.rotator = new Rotator $el, settings
       else if args.length > 0
         data.rotator[args.shift()] args...
