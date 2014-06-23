@@ -164,10 +164,14 @@
       Rotator.prototype.onMouseDown = function(e) {
         this.prevMouseX = e.pageX;
         this.isDragging = true;
+        this.toggleTextSelectionEnabled(false);
       };
 
       Rotator.prototype.onMouseUp = function() {
-        this.isDragging = false;
+        if (this.isDragging) {
+          this.toggleTextSelectionEnabled(true);
+          this.isDragging = false;
+        }
       };
 
       Rotator.prototype.onMouseMove = function(e) {
@@ -252,6 +256,19 @@
 
       Rotator.prototype.getPaper = function() {
         return this.paper;
+      };
+
+      Rotator.prototype.toggleTextSelectionEnabled = function(enabled) {
+        var $body, attrKeys, attrValue, attrs, key, _i, _len;
+        $body = $("body");
+        attrValue = enabled ? "all" : "none";
+        attrKeys = ["-webkit-touch-callout", "-webkit-user-select", "-khtml-user-select", "-moz-user-select", "-ms-user-select", "user-select"];
+        attrs = {};
+        for (_i = 0, _len = attrKeys.length; _i < _len; _i++) {
+          key = attrKeys[_i];
+          attrs[key] = attrValue;
+        }
+        $body.css(attrs);
       };
 
       return Rotator;

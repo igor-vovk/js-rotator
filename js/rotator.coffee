@@ -102,10 +102,13 @@
     onMouseDown: (e) ->
       @prevMouseX = e.pageX
       @isDragging = yes
+      @toggleTextSelectionEnabled no
       return
 
     onMouseUp: ->
-      @isDragging = no
+      if @isDragging
+        @toggleTextSelectionEnabled yes
+        @isDragging = no
       return
 
     onMouseMove: (e) ->
@@ -162,6 +165,23 @@
       return
 
     getPaper: -> @paper
+
+    # http://stackoverflow.com/questions/826782/css-rule-to-disable-text-selection-highlighting#4407335
+    toggleTextSelectionEnabled: (enabled) ->
+      $body = $ "body"
+      attrValue = if enabled then "all" else "none"
+      attrKeys = [
+        "-webkit-touch-callout"
+        "-webkit-user-select"
+        "-khtml-user-select"
+        "-moz-user-select"
+        "-ms-user-select"
+        "user-select"
+      ]
+      attrs = {}
+      attrs[key] = attrValue for key in attrKeys
+      $body.css attrs
+      return
 
   $.region = (bounds, style, slides) ->
     slides = unless _.isArray slides then [slides] else slides
