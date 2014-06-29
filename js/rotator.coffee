@@ -32,6 +32,7 @@
 
   class Rotator
     @defaults =
+      dragEnabled: yes
       images: []
       defaultImage: null
       width: null, height: null
@@ -112,7 +113,7 @@
       return
 
     onMouseMove: (e) ->
-      if @isDragging
+      if @isDragging and @settings.dragEnabled
         mouseX = e.pageX
         mouseXDiff = (mouseX - @prevMouseX) * (if @settings.clockwise then 1 else -1)
         @prevMouseX = mouseX
@@ -124,15 +125,15 @@
           @goToSlide slideOffset
       return
 
-    animateToSlide: (offset) ->
+    animateToSlide: (offset, speed = 40) ->
       if offset == 0 then return
 
       cb = =>
         nextSlide = if offset > 0 then 1 else -1
+        @animateToSlide offset - nextSlide, speed
         @goToSlide nextSlide
-        @animateToSlide offset - nextSlide
 
-      setTimeout cb, 40
+      setTimeout cb, speed
 
     goToSlide: (offset) ->
       images = @settings.images

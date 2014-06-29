@@ -57,6 +57,7 @@
     })();
     Rotator = (function() {
       Rotator.defaults = {
+        dragEnabled: true,
         images: [],
         defaultImage: null,
         width: null,
@@ -176,7 +177,7 @@
 
       Rotator.prototype.onMouseMove = function(e) {
         var mouseX, mouseXDiff, slideOffset;
-        if (this.isDragging) {
+        if (this.isDragging && this.settings.dragEnabled) {
           mouseX = e.pageX;
           mouseXDiff = (mouseX - this.prevMouseX) * (this.settings.clockwise ? 1 : -1);
           this.prevMouseX = mouseX;
@@ -189,8 +190,11 @@
         }
       };
 
-      Rotator.prototype.animateToSlide = function(offset) {
+      Rotator.prototype.animateToSlide = function(offset, speed) {
         var cb;
+        if (speed == null) {
+          speed = 40;
+        }
         if (offset === 0) {
           return;
         }
@@ -198,11 +202,11 @@
           return function() {
             var nextSlide;
             nextSlide = offset > 0 ? 1 : -1;
-            _this.goToSlide(nextSlide);
-            return _this.animateToSlide(offset - nextSlide);
+            _this.animateToSlide(offset - nextSlide, speed);
+            return _this.goToSlide(nextSlide);
           };
         })(this);
-        return setTimeout(cb, 40);
+        return setTimeout(cb, speed);
       };
 
       Rotator.prototype.goToSlide = function(offset) {
